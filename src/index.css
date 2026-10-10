@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: 'Syne', sans-serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  
+  /* Brand Palette: Cosmic Latte, Mocha Cream, Deep Burgundy */
+  --color-cosmic-latte: #FFF8E7;
+  --color-cosmic-latte-soft: #FAF4E8;
+  --color-cosmic-latte-pure: #FFFDF8;
+  
+  --color-mocha-cream: #C8B6A6;
+  --color-mocha-cream-light: #EFE8E0;
+  --color-mocha-cream-dark: #8C6D58;
+  
+  --color-deep-burgundy: #6A1B29;
+  --color-deep-burgundy-dark: #4A0E17;
+  --color-deep-burgundy-light: #8E2538;
+  --color-deep-burgundy-glow: rgba(106, 27, 41, 0.16);
+
+  /* Apple Liquid Glass Studio Defaults */
+  --color-studio-canvas: #FAF6ED;
+  --color-studio-text: #1d1d1f;
+  --color-studio-muted: #7A6F68;
+  --color-studio-subtle: #96867B;
+  --color-studio-glass: rgba(255, 252, 247, 0.78);
+  --color-studio-border: rgba(255, 255, 255, 0.88);
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #FAF5EB;
+  color: #1d1d1f;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, .font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Apple Liquid Glass with Cosmic Latte & Mocha Sheen */
+.liquid-glass {
+  background: rgba(255, 252, 247, 0.78);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 30px rgba(106, 27, 41, 0.03), 
+              0 1px 3px rgba(0, 0, 0, 0.02),
+              inset 0 1px 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.liquid-glass-nav {
+  background: rgba(255, 253, 248, 0.82);
+  backdrop-filter: blur(32px) saturate(190%);
+  -webkit-backdrop-filter: blur(32px) saturate(190%);
+  border-bottom: 1px solid rgba(200, 182, 166, 0.35);
+  box-shadow: 0 4px 24px rgba(106, 27, 41, 0.03);
+}
+
+.liquid-glass-card {
+  background: rgba(255, 252, 247, 0.75);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.88);
+  box-shadow: 0 14px 36px -10px rgba(106, 27, 41, 0.05),
+              0 2px 6px rgba(0, 0, 0, 0.02),
+              inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.95);
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.liquid-glass-card:hover {
+  background: rgba(255, 254, 250, 0.94);
+  border-color: rgba(200, 182, 166, 0.65);
+  box-shadow: 0 24px 48px -12px rgba(106, 27, 41, 0.14),
+              0 4px 14px rgba(0, 0, 0, 0.03),
+              inset 0 1px 2px 0 rgba(255, 255, 255, 1);
+  transform: translateY(-3px);
+}
+
+.liquid-glass-accent {
+  background: linear-gradient(135deg, rgba(255, 253, 248, 0.9), rgba(248, 240, 230, 0.8));
+  backdrop-filter: blur(28px) saturate(190%);
+  border: 1px solid rgba(200, 182, 166, 0.5);
+  box-shadow: 0 16px 36px -6px rgba(106, 27, 41, 0.12),
+              inset 0 1px 1.5px 0 rgba(255, 255, 255, 1);
+}
+
+.liquid-glass-pill {
+  background: rgba(255, 252, 247, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(200, 182, 166, 0.35);
+  box-shadow: 0 2px 8px rgba(106, 27, 41, 0.03), inset 0 1px 1px rgba(255, 255, 255, 0.95);
+}
+
+/* Cosmic Latte & Mocha Refraction Mesh */
+.apple-mesh-bg {
+  background-color: #FAF5EB;
+  background-image: 
+    radial-gradient(at 15% 15%, rgba(255, 248, 231, 0.95) 0px, transparent 50%),
+    radial-gradient(at 85% 10%, rgba(200, 182, 166, 0.28) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(255, 253, 248, 0.92) 0px, transparent 65%),
+    radial-gradient(at 80% 85%, rgba(106, 27, 41, 0.09) 0px, transparent 45%),
+    radial-gradient(at 18% 85%, rgba(200, 182, 166, 0.25) 0px, transparent 50%);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #FAF5EB;
+}
+::-webkit-scrollbar-thumb {
+  background: #C8B6A6;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #6A1B29;
+}
