@@ -16,6 +16,12 @@ const PORT = Number(process.env.PORT) || 3000;
 
 app.use(express.json({ limit: "25mb" }));
 
+const uploadsDir = path.resolve(__dirname, "public/uploads");
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+app.use("/uploads", express.static(uploadsDir));
+
 // Initialize Google GenAI client
 let ai: GoogleGenAI | null = null;
 if (process.env.GEMINI_API_KEY) {
@@ -126,16 +132,11 @@ app.post("/api/upload-founder-photo", (req, res) => {
     const base64Data = matches[2];
     const buffer = Buffer.from(base64Data, "base64");
 
-    const imagesDir = path.resolve(__dirname, "src/assets/images");
-    if (!fs.existsSync(imagesDir)) {
-      fs.mkdirSync(imagesDir, { recursive: true });
-    }
-
     const filename = `founder_vinay_real_${Date.now()}.${ext}`;
-    const targetPath = path.join(imagesDir, filename);
+    const targetPath = path.join(uploadsDir, filename);
     fs.writeFileSync(targetPath, buffer);
 
-    const publicPath = `/src/assets/images/${filename}`;
+    const publicPath = `/uploads/${filename}`;
     return res.json({ success: true, path: publicPath });
   } catch (error: any) {
     console.error("Founder photo upload error:", error);

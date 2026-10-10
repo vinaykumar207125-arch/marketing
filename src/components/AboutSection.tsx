@@ -1,7 +1,8 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { ArrowUpRight, MessageCircle, MapPin, Award, Clapperboard, TrendingUp, Palette, Sliders, CheckCircle2, Camera, RotateCcw } from "lucide-react";
 import { IMAGES, TEAM_MEMBERS } from "../data/content";
 import { AuraLogo } from "./AuraLogo";
+import { getFounderPhoto, saveFounderPhoto, clearFounderPhoto } from "../utils/photoStorage";
 
 interface AboutSectionProps {
   onConnectFounder: () => void;
@@ -9,40 +10,73 @@ interface AboutSectionProps {
 
 export const AboutSection: React.FC<AboutSectionProps> = ({ onConnectFounder }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [customPhoto, setCustomPhoto] = useState<string | null>(() => {
+  const [customPhoto, setCustomPhoto] = useState<string | null>(null);
+
+  // Load photo safely from IndexedDB / server cache on mount
+  useEffect(() => {
+    let isMounted = true;
+    // Clean up any old saturated localStorage key
     try {
-      return localStorage.getItem("aura_founder_real_photo");
+      localStorage.removeItem("aura_founder_real_photo");
     } catch {
-      return null;
+      // Ignore
     }
-  });
+
+    getFounderPhoto()
+      .then((photo) => {
+        if (isMounted && photo) {
+          setCustomPhoto(photo);
+        }
+      })
+      .catch(() => {
+        // Fallback safely to default
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
     const reader = new FileReader();
     reader.onload = async () => {
       const dataUrl = reader.result as string;
+      // 1. Instantly show in UI
       setCustomPhoto(dataUrl);
+
+      // 2. Persist safely to IndexedDB without localStorage quota limits
       try {
-        localStorage.setItem("aura_founder_real_photo", dataUrl);
-        await fetch("/api/upload-founder-photo", {
+        await saveFounderPhoto(dataUrl);
+      } catch {
+        // IndexedDB silent fallback
+      }
+
+      // 3. Upload to server
+      try {
+        const response = await fetch("/api/upload-founder-photo", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ dataUrl }),
         });
-      } catch (err) {
-        console.error("Failed to persist uploaded photo:", err);
+        if (response.ok) {
+          const result = await response.json();
+          if (result?.path) {
+            await saveFounderPhoto(dataUrl, result.path);
+          }
+        }
+      } catch {
+        // Server unreachable or offline
       }
     };
     reader.readAsDataURL(file);
   };
 
-  const handleResetPhoto = () => {
+  const handleResetPhoto = async () => {
     setCustomPhoto(null);
-    try {
-      localStorage.removeItem("aura_founder_real_photo");
-    } catch {}
+    await clearFounderPhoto();
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
   return (
